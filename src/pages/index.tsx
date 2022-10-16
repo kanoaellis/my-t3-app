@@ -4,6 +4,8 @@ import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {
   const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
+  const getAll = trpc.example.getAll.useQuery();
+  const createOne = trpc.example.createOne.useMutation();
 
   return (
     <>
@@ -52,6 +54,24 @@ const Home: NextPage = () => {
         </div>
         <div className="flex w-full items-center justify-center pt-6 text-2xl text-blue-500">
           {hello.data ? <p>{hello.data.greeting}</p> : <p>Loading..</p>}
+          {getAll.data ? (
+            <ul>
+              {getAll.data.map((item) => (
+                <li key={item.id}>{item.message}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>Loading..</p>
+          )}
+          {/* button prisma.post.create */}
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => {
+              createOne.mutate({ message: "Test Post" });
+            }}
+          >
+            Create Post
+          </button>
         </div>
       </main>
     </>
